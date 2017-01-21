@@ -66,6 +66,8 @@ namespace PaToRo_Desktop.Scenes
                 // Gens
                 paddle = new PaddleGenerator(game);
                 sineGen = new SineStackedGenerator(game);
+                sineGen.Controler = new WaveControler(game);
+
 
                 level = new Level(game, 128, 1000);
                 level.LoadContent(game.Content);
@@ -88,6 +90,7 @@ namespace PaToRo_Desktop.Scenes
 
                 Children.Add(starfield);
                 Children.Add(paddle);
+                Children.Add(sineGen.Controler);
                 Children.Add(level);
                 Children.Add(control);
                 Children.Add(Rider);

@@ -111,7 +111,7 @@ namespace PaToRo_Desktop.Scenes
             }
             if (Colliding)
             {
-                Radius -= 0.5f;
+                //Radius -= 0.5f;
             }
             if (Radius <= 5.0f)
             {

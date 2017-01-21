@@ -11,6 +11,8 @@ namespace PaToRo_Desktop.Scenes.Generators
     {
         private readonly BaseGame game;
 
+        public WaveControler Controler { get; set; }
+
         public SineStackedGenerator(BaseGame game)
         {
             this.game = game;
@@ -20,19 +22,25 @@ namespace PaToRo_Desktop.Scenes.Generators
         {
             //float Tmp1 = (float)(Math.Sin(t*3) * 50);
             //float Tmp2 = (float)(Math.Sin(t*6) * 20);
-            float Tmp1 = (float)(Math.Sin(t*3f));
-            float Tmp2 = (float)(Math.Sin(t*0.7f + Math.PI));
-            float Tmp3 = ((float)(Math.Sin(t*0.4f)) + 1) / 2.0f;
+            float Tmp1 = (float)(Math.Sin(t * 3f));
+            float Tmp2 = (float)(Math.Sin(t * 0.7f + Math.PI));
+            float Tmp3 = ((float)(Math.Sin(t * 0.4f)) + 1) / 2.0f;
             return game.Screen.Height * 0.5f - (Tmp1 + Tmp2) * Tmp3 * 100;
         }
 
         public float GetUpper(float t)
         {
-            return CalcMid(t) - (float)Math.Sin(t)*100 - 200;
+            if (Controler != null)
+                return CalcMid(t) - (float)Math.Sin(t) * 100 - Controler.Broadness + Controler.Position;
+            else
+                return CalcMid(t) - (float)Math.Sin(t) * 100 - 200;
         }
         public float GetLower(float t)
         {
-            return CalcMid(t) + (float)Math.Sin(t)*100 + 200;
+            if (Controler != null)
+                return CalcMid(t) + (float)Math.Sin(t) * 100 + Controler.Broadness + Controler.Position;
+            else
+                return CalcMid(t) + (float)Math.Sin(t) * 100 + 200;
         }
     }
 }

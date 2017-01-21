@@ -44,15 +44,30 @@ namespace PaToRo_Desktop.Scenes.Controllers
             if (Entity != null && Entity.Phy != null && game.Inputs.NumPlayers > playerIdx)
             {
                 var cntrl = game.Inputs.Player(playerIdx);
-                Entity.Phy.Spd.X = cntrl.Value(Sliders.LeftStickX) * 800;
-                Entity.Phy.Spd.Y = cntrl.Value(Sliders.LeftStickY) * 800;
+                if (cntrl.Provider is XBoxController)
+                {
+
+                    Entity.Phy.Spd.X = cntrl.Value(Sliders.LeftStickX) * 800;
+                    Entity.Phy.Spd.Y = cntrl.Value(Sliders.LeftStickY) * 800;
+                }
+                if (cntrl.Provider is KeyboardController)
+                {
+
+                    Entity.Phy.Spd.X = 0;
+                    Entity.Phy.Spd.X += cntrl.IsDown(Buttons.DPad_Left) ? -800 : 0;
+                    Entity.Phy.Spd.X += cntrl.IsDown(Buttons.DPad_Right) ? 800 : 0;
+
+                    Entity.Phy.Spd.Y = 0;
+                    Entity.Phy.Spd.Y += cntrl.IsDown(Buttons.DPad_Up) ? -800 : 0;
+                    Entity.Phy.Spd.Y += cntrl.IsDown(Buttons.DPad_Down) ? 800 : 0;
+                }
             }
         }
 
         internal override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             var pos = new Vector2(Entity.Phy.Pos.X, Entity.Phy.Pos.Y);
-            for (int i=1; i<10; ++i)
+            for (int i = 1; i < 10; ++i)
             {
                 spriteBatch.Draw(tex, pos, null, null, origin, 0, scale, color);
                 pos.X += Entity.Phy.Spd.X * i * 0.01f;

@@ -23,7 +23,7 @@ namespace PaToRo_Desktop
         internal override int HandleInput(GameTime gameTime)
         {
             var numPlayers = base.HandleInput(gameTime);
-            bool ButtonPress = game.Inputs.Player(0).AnyButtonDown;
+            bool ButtonPress = game.Inputs.Player(0)?.AnyButtonDown ?? true;
             if (!ButtonPress && LastButtonPress)
             {
                 game.Scenes.Show("level");
