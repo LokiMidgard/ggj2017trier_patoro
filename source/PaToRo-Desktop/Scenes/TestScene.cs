@@ -17,7 +17,7 @@ namespace PaToRo_Desktop.Scenes
     public class TestScene : Scene
     {
         private DebugOverlay dbgOverlay;
-        private TheNewWaveRider rider;
+        internal TheNewWaveRider Rider;
         private DirectController control;
         private Starfield starfield;
 
@@ -31,6 +31,7 @@ namespace PaToRo_Desktop.Scenes
         public float Direction;
         private Texture2D part;
         private PlayerGenerator paddle;
+        private SineStackedGenerator sineGen;
 
         public TestScene(BaseGame game) : base(game)
         {
@@ -38,47 +39,60 @@ namespace PaToRo_Desktop.Scenes
 
         internal override void Initialize()
         {
-            base.Initialize();
-            BgColor = Color.Black;
-            Direction = 1.0f;
+            if (!initialized)
+            {
+                base.Initialize();
+                BgColor = Color.Black;
+                Direction = 1.0f;
+            }
+
+            if (Rider != null)
+            {
+                Rider.Radius = 32.0f;
+                Rider.Phy.Pos.X = game.Screen.Width * 0.1f;
+                Rider.Phy.Pos.Y = game.Screen.Height * 0.5f;
+            }
         }
 
         internal override void LoadContent()
         {
-            base.LoadContent();
+            if (!loaded)
+            {
+                base.LoadContent();
 
-            starfield = new Starfield(game, 700, 8);
-            starfield.LoadContent(game.Content);
+                starfield = new Starfield(game, 700, 8);
+                starfield.LoadContent(game.Content);
 
-            paddle = new PlayerGenerator(game);
+                // Gens
+                paddle = new PlayerGenerator(game);
+                sineGen = new SineStackedGenerator(game);
 
-            level = new Level(game, 128, 5);
-            level.LoadContent(game.Content);
-            level.Generator = paddle;
+                level = new Level(game, 128, 1000);
+                level.LoadContent(game.Content);
+                level.Generator = sineGen; // paddle;
 
+                Rider = new TheNewWaveRider(game, 32f);
+                Rider.LoadContent(game.Content);
+                Rider.Level = level;
+                Rider.Phy.Pos.X = game.Screen.Width * 0.1f;
+                Rider.Phy.Pos.Y = game.Screen.Height * 0.5f;
 
+                control = new DirectController(game, 0, Rider);
+                control.LoadContent(game.Content);
 
-            rider = new TheNewWaveRider(game, 32f);
-            rider.LoadContent(game.Content);
-            rider.Level = level;
-            rider.Phy.Pos.X = game.Screen.Width * 0.1f;
-            rider.Phy.Pos.Y = game.Screen.Height * 0.5f;
-            rider.Phy.RotSpd = 20f;
+                LevelSpeedX = 100.0f;
+                LevelSpeedY = 150.0f;
+                part = game.Content.Load<Texture2D>("Images/particle");
 
-            control = new DirectController(game, 0, rider);
+                dbgOverlay = new DebugOverlay(game);
 
-            LevelSpeedX = 100.0f;
-            LevelSpeedY = 150.0f;
-            part = game.Content.Load<Texture2D>("Images/particle");
-
-            dbgOverlay = new DebugOverlay(game);
-
-            Children.Add(starfield);
-            Children.Add(paddle);
-            Children.Add(level);
-            Children.Add(control);
-            Children.Add(rider);
-            Children.Add(dbgOverlay);
+                Children.Add(starfield);
+                Children.Add(paddle);
+                Children.Add(level);
+                Children.Add(control);
+                Children.Add(Rider);
+                Children.Add(dbgOverlay);
+            }
         }
 
         internal override void Update(GameTime gameTime)
