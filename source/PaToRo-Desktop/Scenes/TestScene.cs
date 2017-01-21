@@ -30,7 +30,7 @@ namespace PaToRo_Desktop.Scenes
         public float SpeedY;
         public float Direction;
         private Texture2D part;
-        private PlayerGenerator paddle;
+        private PaddleGenerator paddle;
         private SineStackedGenerator sineGen;
 
         public TestScene(BaseGame game) : base(game)
@@ -64,7 +64,7 @@ namespace PaToRo_Desktop.Scenes
                 starfield.LoadContent(game.Content);
 
                 // Gens
-                paddle = new PlayerGenerator(game);
+                paddle = new PaddleGenerator(game);
                 sineGen = new SineStackedGenerator(game);
 
                 level = new Level(game, 128, 1000);
